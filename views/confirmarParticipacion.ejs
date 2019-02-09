@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Confirmacion</title>
+
+    <link rel="stylesheet"
+          href="/bootstrap/css/bootstrap.css">
+
+
+    <link rel="stylesheet"
+          href="/css/animate.css">
+
+    <link rel="stylesheet"
+          href="/css/mis-estilos.css">
+
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #111;
+        }
+
+        .active {
+            background-color: #4CAF50;
+        }
+    </style>
+
+</head>
+<body class="bg-dark">
+
+<% const esUsuarioLocal = typeof esUsuario !== "undefined" ? true : false; %>
+<% const esAdministradorLocal = typeof esAdministrador !== "undefined" ? true : false; %>
+<% const hayEntrenadores = typeof entrenadores !== "undefined" ? true : false; %>
+<!--/container-->
+
+
+<% if(esUsuarioLocal || esAdministradorLocal){ %>
+    <% if(esUsuario){ %>
+
+        <% const existeMensaje = typeof mensaje !== "undefined" ? true : false; %>
+
+        <% if(existeMensaje){ %>
+            <div class="fadeOut alert alert-danger" role="alert">
+                MENSAJE: <%= mensaje %>
+            </div>
+        <% } %>
+
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="text-center text-white mb-4">Registro Pokemon</h2>
+                    <div class="row">
+                        <div class="col-md-6 mx-auto">
+
+                            <!-- form card login -->
+                            <div class="card rounded-0">
+                                <div class="card-header">
+                                    <h3 class="mb-0">Elija el pokemon</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form form action="/Entrenador/participar/<%=idEvento%>" method="post" class="form" role="form">
+
+                                        <% if(hayEntrenadores){ %>
+
+                                            <div class="form-group">
+                                                <label for="entrenador">POKEMON:</label>
+                                                <select name="entrenador" id="entrenador">
+                                                    <% entrenadores.forEach((entrenador)=>{ %>
+                                                    <% entrenador.pokemon.forEach((poke)=>{ %>
+                                                    <option value=<%=poke.id%> > <%= poke.nombrePokemon%> ENTRENADOR: <%= entrenador.nombres%> <%= entrenador.apellidos%></option>
+                                                    <% })%>
+                                                        <% })%>
+
+                                                </select>
+                                            </div>
+
+
+
+                                        <% }else{ %>
+
+                                            <h3 class="mb-0">Primero cree un entrenador</h3>
+
+                                            <% } %>
+
+                                        <button class="btn btn-success btn-lg float-left">Confirmar</button>
+
+
+                                    </form>
+                                    <a href="/inicio">
+                                        <button class="btn btn-info btn-lg float-right">Cancelar</button>
+                                    </a>
+                                </div>
+                                <!--/card-block-->
+                            </div>
+                            <!-- /form card login -->
+
+                        </div>
+
+
+                    </div>
+                    <!--/row-->
+
+                </div>
+                <!--/col-->
+            </div>
+            <!--/row-->
+        </div>
+
+    <% }else { %>
+        <h3 class="mb-0">No tiene permisos de ningun tipo.</h3>
+    <% } %>
+<% }else { %>
+    <h3 class="mb-0">No tiene permisos de ningun tipo.</h3>
+<% } %>
+
+
+<%- include('./comunes/librerias')%>
+
+
+<%- include('./comunes/footer')%>

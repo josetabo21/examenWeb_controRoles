@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+    <% const existeTitulo = typeof titulo !== "undefined" ? true : false; %>
+
+
+    <% if(existeTitulo){ %>
+
+        <title><%= titulo %></title>
+    <% } %>
+
+
+    <link rel="stylesheet"
+          href="/bootstrap/css/bootstrap.css">
+
+
+    <link rel="stylesheet"
+          href="/css/animate.css">
+
+    <link rel="stylesheet"
+          href="/css/mis-estilos.css">
+
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #111;
+        }
+
+        .active {
+            background-color: #4CAF50;
+        }
+    </style>
+
+</head>
+<body class="bg-dark">
+
+<% var creando = typeof usuario === "undefined" ? true : false; %>
+
+
+<% const existeMensaje = typeof mensaje !== "undefined" ? true : false; %>
+
+<% if(existeMensaje){ %>
+
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        MENSAJE: <%= mensaje %>
+    </div>
+<% } %>
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center text-white mb-4">Registro</h2>
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+
+                    <!-- form card login -->
+                    <div class="card rounded-0">
+                        <div class="card-header">
+                            <h3 class="mb-0">Ingrese sus datos</h3>
+                        </div>
+                        <div class="card-body">
+                            <form form action="/Usuario/<%= creando ? 'crear' : 'actualizar' %>-usuario/<%= creando ? '' : usuario.id %>" method="post" class="form" role="form">
+                                <div class="form-group">
+                                    <label for="nombre">Nombre</label>
+                                    <input id="nombre"
+                                           value="<%= creando ? '' : usuario.nombre %>"
+                                           name="nombre" type="text"
+                                           class="form-control form-control-lg rounded-0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="correo">Correo</label>
+                                    <input id="correo"
+                                           value="<%= creando ? '' : usuario.correo %>"
+                                           name="correo" type="text"
+                                           class="form-control form-control-lg rounded-0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input id="password"
+                                           value="<%= creando ? '' : usuario.password %>"
+                                           name="password" type="text"
+                                           class="form-control form-control-lg rounded-0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="fechaNacimiento">Fecha de nacimiento</label>
+                                    <input id="fechaNacimiento"
+                                           value="<%= creando ? '' : usuario.fechaNacimiento %>"
+                                           name="fechaNacimiento" type="date"
+                                           class="form-control form-control-lg rounded-0">
+                                </div>
+
+                                <button class="btn btn-success btn-lg float-left"><%= creando ? 'Crear' : 'Actualizar' %> Usuario</button>
+                            </form>
+                            <a href="/login">
+                                <button class="btn btn-info btn-lg float-right">Regresar</button>
+                            </a>
+                        </div>
+                        <!--/card-block-->
+                    </div>
+                    <!-- /form card login -->
+
+                </div>
+
+
+            </div>
+            <!--/row-->
+
+        </div>
+        <!--/col-->
+    </div>
+    <!--/row-->
+</div>
+<!--/container-->
+
+
+<%- include('comunes/librerias')%>
+
+
+<%- include('comunes/footer')%>

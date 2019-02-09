@@ -1,0 +1,276 @@
+<%- include('comunes/header', {titulo:titulo})%>
+
+<% const esUsuarioLocal = typeof esUsuario !== "undefined" ? true : false; %>
+<% const esAdministradorLocal = typeof esAdministrador !== "undefined" ? true : false; %>
+<% const existeMensaje = typeof mensaje !== "undefined" ? true : false; %>
+
+<% if(existeMensaje){ %>
+
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        MENSAJE: <%= mensaje %>
+    </div>
+<% } %>
+
+
+<ul>
+    <li><a href="/inicio">Home</a></li>
+
+    <% if(!esUsuarioLocal && !esAdministradorLocal){ %>
+        <li style="float:right"><a class="active" href="/login">Iniciar sesión</a></li>
+    <% } else{ %>
+        <% if( esAdministrador){ %>
+            <li><a href="/Usuario/inicio">Administrar usuarios</a></li>
+            <li><a href="/Evento/admin">Administrar eventos</a></li>
+            <li style="float:right"><a class="active" href="/logout">Logout</a></li>
+        <% } else if(esUsuario){%>
+            <li style="float:right"><a class="active" href="/logout">Logout</a></li>
+        <% } %>
+
+    <% } %>
+
+</ul>
+
+<%if(esUsuarioLocal||esAdministradorLocal) {%>
+<%if(esUsuario||esAdministrador) {%>
+
+<br>
+<div class="row">
+    <div class="col-sm-1">
+    </div>
+<div class="col-sm-6">
+
+<form action="/Videojuego/admin" method="get">
+    <div class="row">
+        <div class="col-sm-9">
+
+            <div class="form-group-row">
+                <label for="busqueda" >BUSCAR VIDEOJUEGO:</label>
+                <input id="busqueda"
+                       type="text"
+                       class="form-control"
+                       name="busqueda">
+            </div>
+
+        </div>
+        <div class="col-sm-3">
+
+            <button class="btn btn-outline-info btn-block btn-buscar"
+                    type="submit">Buscar
+            </button>
+
+        </div>
+    </div>
+</form>
+
+<br>
+<table class="table table-hover animated fadeInUp">
+    <!-- tr -> table row -->
+    <thead>
+    <tr>
+        <!-- th -> table header -->
+        <th width="30%">Nombre</th>
+        <th width="30%">Fecha</th>
+        <th width="20%">Accion</th>
+
+    </tr>
+    </thead>
+    <!-- tr -> table row -->
+    <tbody>
+    <% arreglo.forEach((evento)=>{ %>
+        <tr>
+            <!-- td -> table detail -->
+            <td><%= evento.nombre %></td>
+            <td><%= evento.fecha %></td>
+            <td>
+                <form action="/Evento/borrar/<%= evento.id %>"
+                      method="post">
+
+                    <!--<button type="button">Yo no</button>-->
+                    <!--<button>Yo si</button>-->
+                    <button type="submit"
+                            class="btn btn-outline-danger btn-block btn-espaciado"
+                            onclick="borrar(event)">Eliminar
+                    </button>
+                </form>
+
+                    <button class="btn btn-outline-info btn-block btn-espaciado"
+                            type="button"
+                            onclick="cargarFormulario('<%= evento.id %>','<%= evento.nombre %>','<%= evento.fecha %>','<%= evento.latitud %>','<%= evento.longitud %>')">Seleccionar
+                    </button>
+
+
+
+
+            </td>
+        </tr>
+    <% }) %>
+    </tbody>
+</table>
+</div>
+
+
+<div class="col-sm-4">
+
+                    <!-- form card login -->
+    <div class="card rounded-0">
+        <div class="card-header">
+            <h3 class="mb-0">Ingrese los datos del evento</h3>
+        </div>
+        <input id="id"
+               name="id" type="hidden"
+        >
+        <div class="card-body">
+                            <form id = "formCrearActualizar" method="post" class="form" role="form">
+                                <div class="form-group">
+                                    <label for="nombre">Nombre</label>
+                                    <input id="nombre"
+                                           name="nombre" type="text"
+                                           class="form-control form-control-lg rounded-0">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="fecha">Fecha</label>
+                                    <input id="fecha"
+                                           name="fecha" type="date"
+                                           class="form-control form-control-lg rounded-0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="latitud">Latitud</label>
+                                    <input id="latitud"
+                                           name="latitud" type="number" step="any"
+                                           class="form-control form-control-lg rounded-0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="longitud">Longitud</label>
+                                    <input id="longitud"
+                                           name="longitud" type="number"step="any"
+                                           class="form-control form-control-lg rounded-0">
+                                </div>
+                                <div id='map' style="width:100%;height:400px;"></div>
+                                <pre id='info'></pre>
+
+
+                                <button class="btn btn-success btn-lg float-left" value="Send!" onClick="actionFormCrear(this.form.id, 'crear'); return false;" />Crear nuevo</button>
+                                <button class="btn btn-info btn-lg float-right" value="Send2!" onClick="actionFormActualizar(this.form.id, 'actualizar/'); return false;" />Actualizar</button>
+                            </form>
+
+
+        </div>
+
+    </div>
+
+
+    <!--/card-block-->
+
+                    <!-- /form card login -->
+            <!--/row-->
+
+
+</div>
+
+</div>
+
+<%}else {%>
+    <h3 class="mb-0">No tiene permisos para ver esto.</h3>
+<%}%>
+<%}else {%>
+    <h3 class="mb-0">No tiene permisos para ver esto.</h3>
+<%}%>
+
+
+
+
+<%- include('comunes/librerias')%>
+
+
+
+
+<script>
+    function holaMundo(evento) {
+        console.log(evento)
+
+        evento.preventDefault();
+
+        const respuesta = confirm('¿Estas seguro?')
+
+        console.log('Hola mundo')
+    }
+
+    function borrar(evento) {
+
+
+        const respuesta = confirm('¿Estas seguro?')
+
+        if (!respuesta) {
+            event.preventDefault();
+        }
+
+    }
+
+    function cargarFormulario(id, nombre, fecha, latitud, longitud){
+        document.getElementById("id").value=id;
+        document.getElementById("nombre").value=nombre;
+        document.getElementById("fecha").value=fecha;
+        document.getElementById("latitud").value=latitud;
+        document.getElementById("longitud").value=longitud;
+
+        var map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/mapbox/streets-v9',
+            center: [longitud, latitud], // starting position
+            zoom: 9 // starting zoom
+        });
+        map.on('click', function (e) {
+
+            document.getElementById("latitud").value=e.lngLat.lat;
+            document.getElementById("longitud").value=e.lngLat.lng;
+
+        });
+
+    }
+
+    function actionFormCrear(formid, act)
+    {
+        document.getElementById("formCrearActualizar").action=act;
+        document.getElementById("formCrearActualizar").submit();
+    }
+
+    function actionFormActualizar(formid, act)
+    {
+        document.getElementById("formCrearActualizar").action=""+act+document.getElementById("id").value;
+        document.getElementById("formCrearActualizar").submit();
+    }
+
+
+</script>
+<script>
+    $(function () {
+        $('.bootstrap-popover')
+            .popover({
+                container: 'body'
+            })
+    })
+</script>
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoicmFmZmFub3YiLCJhIjoiY2pydjh4b2Z1MGl2YTRhbWttaXFwMXVmeSJ9.0uhktgtBjE4pRbwfDk4zGg';
+    var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/mapbox/streets-v9',
+        center: [-78.40, -0.22], // starting position
+        zoom: 9 // starting zoom
+    });
+
+    map.on('click', function (e) {
+
+        document.getElementById("latitud").value=e.lngLat.lat;
+        document.getElementById("longitud").value=e.lngLat.lng;
+
+    });
+
+
+
+</script>
+
+<%- include('comunes/footer')%>

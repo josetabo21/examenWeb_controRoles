@@ -1,0 +1,162 @@
+<%- include('comunes/header', {titulo:titulo})%>
+
+<% const esUsuarioLocal = typeof esUsuario !== "undefined" ? true : false; %>
+<% const esAdministradorLocal = typeof esAdministrador !== "undefined" ? true : false; %>
+
+
+<ul>
+    <li><a href="/inicio">Home</a></li>
+
+    <% if(!esUsuarioLocal && !esAdministradorLocal){ %>
+        <li style="float:right"><a class="active" href="/login">Iniciar sesión</a></li>
+    <% } else{ %>
+        <% if(esUsuario && esAdministrador){ %>
+            <li><a href="/Entrenador/registrarEntrenador">Crear entrenador</a></li>
+            <li><a href="/Entrenador/registrarPokemon">Crear pokemon</a></li>
+            <li><a href="/Usuario/inicio">Administrar usuarios</a></li>
+            <li><a href="/Evento/admin">Administrar eventos</a></li>
+
+            <li style="float:right"><a class="active" href="/logout">Logout</a></li>
+        <% } else if(esAdministrador){%>
+            <li><a href="/Usuario/inicio">Administrar usuarios</a></li>
+            <li><a href="/Evento/admin">Administrar eventos</a></li>
+            <li style="float:right"><a class="active" href="/logout">Logout</a></li>
+        <% } else if(esUsuario){%>
+                <li><a href="/Entrenador/registrarEntrenador">Crear entrenador</a></li>
+                <li><a href="/Entrenador/registrarPokemon">Crear pokemon</a></li>
+            <li style="float:right"><a class="active" href="/logout">Logout</a></li>
+
+        <% }else{ %>
+            <li style="float:right"><a class="active" href="/login">Iniciar sesión</a></li>
+        <% } %>
+
+    <% } %>
+    <br><br>
+    <div class="container">
+        <img src="https://crystal-cdn2.crystalcommerce.com/photos/6330565/splashBanner_pokemon.jpg" class="d-block w-100 tamanio-imagen " align="center"
+             alt="banner">
+    </div>
+</ul>
+
+<br>
+
+<div class="row">
+    <div class="col-sm-1">
+
+    </div>
+    <div class="col-sm-10">
+
+        <form action="/inicio" method="get">
+            <div class="row">
+                <div class="col-sm-9">
+
+                    <div class="form-group-row">
+                        <label for="busqueda" >BUSCAR EVENTO</label>
+                        <input id="busqueda"
+                               type="text"
+                               class="form-control"
+                               name="busqueda">
+                    </div>
+
+                </div>
+                <div class="col-sm-3">
+
+                    <button class="btn btn-outline-info btn-block btn-buscar"
+                            type="submit">Buscar
+                    </button>
+
+                </div>
+            </div>
+        </form>
+
+        <br>
+        <table class="table table-hover animated fadeInUp">
+            <!-- tr -> table row -->
+            <thead>
+            <tr>
+                <!-- th -> table header -->
+                <th width="30%">Nombre</th>
+                <th width="25%">Fecha</th>
+                <th width="25%">Acciones</th>
+
+            </tr>
+            </thead>
+            <!-- tr -> table row -->
+            <tbody>
+            <% arreglo.forEach((evento)=>{ %>
+                <tr>
+                    <!-- td -> table detail -->
+                    <td><%= evento.nombre %></td>
+                    <td><%= evento.fecha %></td>
+                    <td>
+
+
+                        <%if(esUsuarioLocal||esAdministradorLocal) {%>
+                        <%if(esUsuario||esAdministrador) {%>
+                            <a class="quitar-decoracion" href="/Entrenador/participar/<%= evento.id %>">
+
+                                <button class="btn btn-outline-success btn-block btn-espaciado"
+                                        type="button">
+                                    Participar
+                                </button>
+                            </a>
+
+                        <%}%>
+                        <%}%>
+                        <a class="quitar-decoracion" href="/EventoPorPokemon/detalle/<%= evento.id %>">
+
+                            <button class="btn btn-outline-info btn-block btn-espaciado"
+                                    type="button">
+                                Detalles
+                            </button>
+                        </a>
+
+
+
+                    </td>
+                </tr>
+            <% }) %>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+</div>
+
+<%- include('comunes/librerias')%>
+
+<script>
+    function holaMundo(evento) {
+        console.log(evento)
+
+        evento.preventDefault();
+
+        const respuesta = confirm('¿Estas seguro?')
+
+        console.log('Hola mundo')
+    }
+
+    function borrar(evento) {
+
+        const respuesta = confirm('¿Estas seguro?')
+
+        if (!respuesta) {
+            event.preventDefault();
+        }
+
+    }
+
+
+</script>
+<script>
+    $(function () {
+        $('.bootstrap-popover')
+            .popover({
+                container: 'body'
+            })
+    })
+</script>
+
+<%- include('comunes/footer')%>

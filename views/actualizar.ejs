@@ -1,0 +1,153 @@
+<%- include('comunes/header')%>
+
+<% const esUsuarioLocal = typeof esUsuario !== "undefined" ? true : false; %>
+<% const esAdministradorLocal = typeof esAdministrador !== "undefined" ? true : false; %>
+
+<ul>
+    <li><a href="/inicio">Home</a></li>
+    <li style="float:right"><a class="active" href="/logout">Logout</a></li>
+</ul>
+
+
+<%if(esUsuarioLocal||esAdministradorLocal) {%>
+<%if(esUsuario||esAdministrador) {%>
+
+
+<% const existeMensaje = typeof mensaje !== "undefined" ? true : false; %>
+
+<% if(existeMensaje){ %>
+
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        MENSAJE: <%= mensaje %>
+    </div>
+<% } %>
+
+
+
+<h2 class="text-center mb-4">Actualizar</h2>
+<div class="row">
+<div class="col-sm-4">
+    <table class="table table-hover animated fadeInUp">
+        <!-- tr -> table row -->
+        <thead>
+        <tr>
+            <!-- th -> table header -->
+            <th width="30%">Usuario</th>
+        </tr>
+        </thead>
+        <!-- tr -> table row -->
+        <tbody>
+        <tr>
+            <!-- td -> table detail -->
+            <td><%= usuario.nombre %></td>
+        </tr>
+        <tr>
+            <td><%= usuario.correo %></td>
+        </tr>
+        <tr>
+            <td><%= usuario.fechaNacimiento %></td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<div class="col-sm-4">
+    <table class="table table-hover animated fadeInUp">
+        <!-- tr -> table row -->
+        <thead>
+        <tr>
+            <!-- th -> table header -->
+            <th width="30%">Roles</th>
+        </tr>
+        </thead>
+        <!-- tr -> table row -->
+        <tbody>
+        <% rolesUsuario.forEach((roluser)=>{ %>
+        <tr>
+            <!-- td -> table detail -->
+            <td>
+                <form action="/RolesPorUsuario/borrar/<%= roluser.id %>/<%= usuario.id %>"method="post">
+                    <%= roluser.rol.nombre%>
+                    <!--<button type="button">Yo no</button>-->
+                    <!--<button>Yo si</button>-->
+                    <button type="submit" class="close" aria-label="Close">
+                        <span aria-hidden="true" onclick="borrar(event)">&times;</span></button>
+
+                </form>
+
+
+            </td>
+        </tr>
+        <% }) %>
+
+        </tbody>
+    </table>
+</div>
+    <div class="col-sm-4">
+
+        <h2>Roles</h2>
+        <form action="/Usuario/agregar/<%= usuario.id%>" method="post">
+            <select name="idRol" id="idRol">
+                <% allRoles.forEach((rolls)=>{ %>
+                    <option value=<%= rolls.id%>><%= rolls.nombre%></option>
+                <% }) %>
+            </select>
+            <br><br>
+            <input type="submit"
+                    class="btn btn-outline-info btn-block"
+                   value="Agregar rol"
+                    ></input>
+        </form>
+
+    </div>
+</div>
+
+<%}else {%>
+    <h3 class="mb-0">No tiene permisos para ver esto.</h3>
+<%}%>
+<%}else {%>
+    <h3 class="mb-0">No tiene permisos para ver esto.</h3>
+<%}%>
+
+
+
+<%- include('comunes/librerias')%>
+
+
+<script>
+    function holaMundo(evento) {
+        console.log(evento)
+
+        evento.preventDefault();
+
+        const respuesta = confirm('¿Estas seguro?')
+
+        console.log('Hola mundo')
+    }
+
+    function borrar(evento) {
+
+        const respuesta = confirm('¿Estas seguro?')
+
+        if (!respuesta) {
+            event.preventDefault();
+        }
+
+    }
+
+
+</script>
+<script>
+    $(function () {
+        $('.bootstrap-popover')
+            .popover({
+                container: 'body'
+            })
+    })
+</script>
+<script>
+    $('.toast').toast('show')
+</script>
+
+<%- include('comunes/footer')%>

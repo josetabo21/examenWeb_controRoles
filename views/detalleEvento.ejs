@@ -1,0 +1,120 @@
+<%- include('comunes/header', {titulo:titulo})%>
+
+<% const esUsuarioLocal = typeof esUsuario !== "undefined" ? true : false; %>
+<% const esAdministradorLocal = typeof esAdministrador !== "undefined" ? true : false; %>
+
+
+<ul>
+    <li><a href="/inicio">Home</a></li>
+
+    <% if(!esUsuarioLocal && !esAdministradorLocal){ %>
+        <li style="float:right"><a class="active" href="/login">Iniciar sesión</a></li>
+    <% } else{ %>
+        <% if(esUsuario && esAdministrador){ %>
+
+            <li><a href="/Usuario/inicio">Administrar usuarios</a></li>
+            <li><a href="/Evento/admin">Administrar eventos</a></li>
+
+            <li style="float:right"><a class="active" href="/logout">Logout</a></li>
+        <% } else if(esAdministrador){%>
+            <li><a href="/Usuario/inicio">Administrar usuarios</a></li>
+            <li><a href="/Evento/admin">Administrar eventos</a></li>
+            <li style="float:right"><a class="active" href="/logout">Logout</a></li>
+        <% } else if(esUsuario){%>
+            <li style="float:right"><a class="active" href="/logout">Logout</a></li>
+
+        <% }else{ %>
+            <li style="float:right"><a class="active" href="/login">Iniciar sesión</a></li>
+        <% } %>
+
+    <% } %>
+</ul>
+<h1 class="mb-0" align="center"><%=evento.nombre%></h1>
+<h5 align="center"><%=evento.fecha%></h5>
+<br>
+
+<div class="row">
+
+    <% eventoPorPokemon.forEach((eventoPk)=>{%>
+
+
+
+
+    <div class="col-md-3">
+
+
+        <div class="card rounded-0">
+            <div class="card-header">
+                <h5 class="mb-0"> <%= eventoPk.pokemon.nombrePokemon%></h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>#: <%= eventoPk.pokemon.numeroPokemon%></label>
+                </div>
+
+                <div class="form-group">
+                    <label>Poder especial 1 :<%= eventoPk.pokemon.poderEspecialUno%></label>
+                </div>
+                <div class="form-group">
+                    <label>Poder especial 2: <%= eventoPk.pokemon.poderEspecialDos%></label>
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha captura: <%= eventoPk.pokemon.fechaCaptura%></label>
+                </div>
+                <div class="form-group">
+                    <label>Nivel: <%= eventoPk.pokemon.nivel%></label>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+        <%}) %>
+
+
+
+</div>
+
+
+</div>
+
+<%- include('comunes/librerias')%>
+
+<script>
+    function holaMundo(evento) {
+        console.log(evento)
+
+        evento.preventDefault();
+
+        const respuesta = confirm('¿Estas seguro?')
+
+        console.log('Hola mundo')
+    }
+
+    function borrar(evento) {
+
+        const respuesta = confirm('¿Estas seguro?')
+
+        if (!respuesta) {
+            event.preventDefault();
+        }
+
+    }
+
+
+</script>
+<script>
+    $(function () {
+        $('.bootstrap-popover')
+            .popover({
+                container: 'body'
+            })
+    })
+</script>
+
+<%- include('comunes/footer')%>
